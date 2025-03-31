@@ -2,6 +2,9 @@
   "name": "coding-quiz",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "20.17.0"
+  },
   "scripts": {
     "start": "cd server && npm run start",
     "seed": "cd server && npm run seed",

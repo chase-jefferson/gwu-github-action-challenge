@@ -1,0 +1,27 @@
+name: GWU-CICD-CHALLENGE - Main Deployment
+
+# Run Deployment post closing
+on:
+  pull_request:
+    types: closed
+    branches:
+      - main
+
+jobs:
+  render-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Get code from repo
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Use Node.js 20.17.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 20.17.0
+      - name: install dependencies
+        run: npm ci
+      - name: Render Deploy Action
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$DEPLOY_URL"

@@ -1,0 +1,27 @@
+name: GWU-CICD-CHALLENGE - Check Tests to Develop
+
+# Run tests for PRs to Develop branch
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test-runner:
+    runs-on: ubuntu-latest
+    steps:
+      # Get code from repo
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Use Node.js 20.17.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 20.17.0
+      - name: install dependencies
+        run: npm ci
+      - name: Cypress run component tests
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm run start
+          component: true
