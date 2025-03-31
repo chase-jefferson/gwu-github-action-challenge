@@ -1,31 +1,27 @@
-# Name of workflow
-name: GWU-CICD-CHALLENGE - Main Development
-
-env:
-  deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+name: GWU-CICD-CHALLENGE - Main Deployment
 
 # Run Deployment post closing
 on:
   pull_request:
     types: closed
     branches:
-      - main # Run deploy after pushed to main
+      - main
 
 jobs:
   render-deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: 20.17.x
     steps:
+      # Get code from repo
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: CI and CD using Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/checkout@v1
+      - name: Use Node.js 20.17.0
+        uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: 20.17.0
       - name: install dependencies
         run: npm ci
       - name: Render Deploy Action
-        run: curl "$deploy_url"
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$DEPLOY_URL"
